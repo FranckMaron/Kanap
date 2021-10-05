@@ -1,11 +1,14 @@
 //On declare nos fonctions dans une fonction principale
 (async function () {
+  //Création du panier
+  userPanier = JSON.parse(localStorage.getItem("panier"));
   const articleId = getArticleId();
   const article = await getArticle(articleId);
   articleDisplay(article);
   getArticleColors(article);
   titleDisplay(article);
   addArticleToBasket(article);
+  // verifyPanier(article)
 })();
 
 //On recupere les articles avec leur ID
@@ -79,13 +82,13 @@ function getArticleColors(article) {
       `;
   }
 }
-//Création du panier
 
+//Ajoute un article au panier
 function addArticleToBasket(article) {
   document.getElementById("addToCart").addEventListener("click", (e) => {
     e.preventDefault();
 
-    //On récupere le choix de la couleure et de la quantité
+    //On récupere le choix de la couleur et de la quantité
     const choixColor = document.getElementById("colors").value;
     const choixQuantite = document.getElementById("quantity").value;
 
@@ -95,26 +98,35 @@ function addArticleToBasket(article) {
       nom: article.name,
       id: article._id,
       quantite: choixQuantite,
-      couleure: choixColor,
+      couleur: choixColor,
       prix: article.price,
     };
-    
 
-    let userPanier = JSON.parse(localStorage.getItem("panier"));
     // Verification de l'existence du panier
-    //Si il existe on ajoute le produit
+    //Si il existe on vérifie d'abord l'existence du même produit de même couleur
     if (userPanier) {
-      userPanier.push(product);
-      localStorage.setItem("panier", JSON.stringify(userPanier));
-      alert("Votre article à bien été ajouter au panier");
-      //Sinon on le créer avant d'ajouter le produit
+      const resultFind = userPanier.find(
+        (el) => el.id === article._id && el.couleur === choixColor
+      );
+      //Si le produit es déja dans le panier on ajoute simplement la quantité
+      if (resultFind) {
+        let newQuantite =
+          parseInt(product.quantite) + parseInt(resultFind.quantite);
+        resultFind.quantite = newQuantite;
+        localStorage.setItem("panier", JSON.stringify(userPanier));
+        alert("Votre article à bien été ajouter au panier");
+        //Sinon on ajoute le produit
+      } else {
+        userPanier.push(product);
+        localStorage.setItem("panier", JSON.stringify(userPanier));
+        alert("Votre article à bien été ajouter au panier");
+      }
+      //Si le panier n'existe pas on le créer puis on ajoute le nouveau produit
     } else {
       userPanier = [];
       userPanier.push(product);
       localStorage.setItem("panier", JSON.stringify(userPanier));
       alert("Votre article à bien été ajouter au panier");
     }
-
-    //Verification si un produit similaire es deja present dans le panier
   });
 }

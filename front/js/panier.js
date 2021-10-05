@@ -30,6 +30,8 @@ function panierDisplay() {
                     <p>Prix unitaire : ${produit.prix}</p>
                     <p>Prix total : ${produit.prix * produit.quantite} €</p>
                 </div>
+                <div class="cart__item">
+                  <p>Couleur : ${produit.couleur}</p>
                 <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
                         <p>Qté : </p>
@@ -58,7 +60,7 @@ function panierDisplay() {
 //         console.log("ca marche");
 //     })
 //     console.log(newQuantity);
-    
+
 // }choixQuantiteInPanier()
 
 //Supprimer un article du panier
@@ -85,8 +87,7 @@ function totalPrice() {
     prixPanier.reduce(calculTotal);
 }
 
-
-// Calcul du nombre d'article total dans notre panier avec le meme fonctionnement que le prix
+// Calcul du nombre d'article total dans notre panier avec le meme fonctionnement que le prix total
 function totalQuantite() {
   let quantitePanier = [];
   for (i = 0; i < userPanier.length; i++) {
@@ -96,4 +97,5 @@ function totalQuantite() {
     document.getElementById("totalQuantity").textContent =
       quantitePanier.reduce(calculTotal);
   }
+  console.log(userPanier);
 }
