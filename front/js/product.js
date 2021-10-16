@@ -1,17 +1,18 @@
-//On declare nos fonctions dans une fonction principale
+let userPanier = JSON.parse(localStorage.getItem("panier"));
+
+//------------------On declare nos fonctions dans une fonction principale----------------------
+
 (async function () {
-  //Création du panier
-  userPanier = JSON.parse(localStorage.getItem("panier"));
   const articleId = getArticleId();
   const article = await getArticle(articleId);
   articleDisplay(article);
   getArticleColors(article);
   titleDisplay(article);
   addArticleToBasket(article);
-  // verifyPanier(article)
 })();
 
-//On recupere les articles avec leur ID
+//---------------------------On recupere les articles avec leur ID-----------------------------
+
 function getArticle(articleId) {
   return fetch(`http://localhost:3000/api/products/${articleId}`)
     .then((res) => res.json())
@@ -19,17 +20,20 @@ function getArticle(articleId) {
     .catch((error) => (error = alert("Une erreure es survenue avec L'API")));
 }
 
-//On rajoute l'ID de chaque produit dans l'adresse de la page
+//----------On rajoute l'ID de chaque produit dans l'adresse de la page------------------------
+
 function getArticleId() {
   return new URL(location.href).searchParams.get("id");
 }
 
-//On ajoute le titre de la page Web correspondant à l'article
+//--------------On ajoute le titre de la page Web correspondant à l'article--------------------
+
 function titleDisplay(article) {
   document.querySelector("title").textContent = `${article.name}`;
 }
 
-//On fait apparaitre le bon article de facon dynamique
+//------------------On fait apparaitre le bon article de facon dynamique-----------------------
+
 function articleDisplay(article) {
   document.querySelector("section").innerHTML += `
     <article>
@@ -72,10 +76,11 @@ function articleDisplay(article) {
     `;
 }
 
-//Ajout du choix de la couleure
+//------------------------------Ajout du choix de la couleure----------------------------------
+
 function getArticleColors(article) {
   for (let color of article.colors) {
-    colorContainer = document.getElementById("colors").innerHTML += `  
+    document.getElementById("colors").innerHTML += `  
       <option value="${color}">
       ${color}   
       </option> 
@@ -83,16 +88,14 @@ function getArticleColors(article) {
   }
 }
 
-//Ajoute un article au panier
+//-----------------------------Ajoute un article au panier-----------------------------------
 function addArticleToBasket(article) {
   document.getElementById("addToCart").addEventListener("click", (e) => {
     e.preventDefault();
 
-    //On récupere le choix de la couleur et de la quantité
     const choixColor = document.getElementById("colors").value;
     const choixQuantite = document.getElementById("quantity").value;
 
-    // Création d'un objet type contenant les informations du produit
     const product = {
       image: article.imageUrl,
       nom: article.name,
@@ -102,25 +105,28 @@ function addArticleToBasket(article) {
       prix: article.price,
     };
 
-    // Verification de l'existence du panier
+    //Verification de l'existence du panier
+
     //Si il existe on vérifie d'abord l'existence du même produit de même couleur
     if (userPanier) {
       const resultFind = userPanier.find(
         (el) => el.id === article._id && el.couleur === choixColor
       );
+
       //Si le produit es déja dans le panier on ajoute simplement la quantité
       if (resultFind) {
-        let newQuantite =
-          parseInt(product.quantite) + parseInt(resultFind.quantite);
+        let newQuantite = parseInt(product.quantite) + parseInt(resultFind.quantite);
         resultFind.quantite = newQuantite;
         localStorage.setItem("panier", JSON.stringify(userPanier));
         alert("Votre article à bien été ajouter au panier");
+
         //Sinon on ajoute le produit
       } else {
         userPanier.push(product);
         localStorage.setItem("panier", JSON.stringify(userPanier));
         alert("Votre article à bien été ajouter au panier");
       }
+
       //Si le panier n'existe pas on le créer puis on ajoute le nouveau produit
     } else {
       userPanier = [];

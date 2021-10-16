@@ -1,13 +1,9 @@
-//Appel de la fonction principale
 main();
-//Déclaration de la fonction main
+//---------------Déclaration de la fonction principale appelant nos fonctions------------------
 async function main() {
   const articles = await getArticles();
-
-  for (let article of articles) {
-    displayArticle(article);
-  }
-}  
+  displayArticle(articles);
+}
 
 //Récupération de la liste  d'articles depuis l'API
 async function getArticles() {
@@ -18,8 +14,9 @@ async function getArticles() {
 }
 
 //Apparition des articles de l'API dynamiquement
-function displayArticle(article) {
-  document.getElementById("items").innerHTML += `
+function displayArticle(articles) {
+  for (let article of articles) {
+    document.getElementById("items").innerHTML += `
   <a href="./product.html?id=${article._id}">
   <article>
     <img src="${article.imageUrl}" alt="${article.altTxt}">
@@ -27,4 +24,5 @@ function displayArticle(article) {
     <p class="productDescription">${article.description}</p>
   </article>
 </a>`;
+  }
 }
