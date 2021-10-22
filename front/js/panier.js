@@ -235,6 +235,7 @@ function sendCommand() {
         .then((data) => {
           localStorage.setItem("order", JSON.stringify(data));
           window.location = "confirmation.html";
+          localStorage.removeItem("panier")
         });
     } else {
       alert("Une erreure es survenue, veuillez vérifier votre panier ainsi que votre formulaire !");

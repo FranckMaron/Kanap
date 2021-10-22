@@ -96,19 +96,24 @@ function addArticleToBasket(article) {
     const choixColor = document.getElementById("colors").value;
     const choixQuantite = document.getElementById("quantity").value;
 
+    
+
     const product = {
       image: article.imageUrl,
       nom: article.name,
       id: article._id,
-      quantite: choixQuantite,
+      quantite: parseInt(choixQuantite),
       couleur: choixColor,
       prix: article.price,
     };
 
-    //Verification de l'existence du panier
-
-    //Si il existe on vérifie d'abord l'existence du même produit de même couleur
-    if (userPanier) {
+    //Verification d'une quantité valide
+    //si quantité invalide on affaiche une erreure
+    if (choixQuantite < 1 || choixQuantite > 100) {
+      alert("Veuillez entrez une quantité entre 1 et 100")
+      //sinon on verifie l'existance du panier et si un produit identique es déja dedans 
+    } else {
+      if (userPanier) {
       const resultFind = userPanier.find(
         (el) => el.id === article._id && el.couleur === choixColor
       );
@@ -134,5 +139,7 @@ function addArticleToBasket(article) {
       localStorage.setItem("panier", JSON.stringify(userPanier));
       alert("Votre article à bien été ajouter au panier");
     }
+    }
+    
   });
 }
